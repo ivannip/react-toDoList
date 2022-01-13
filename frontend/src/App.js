@@ -114,6 +114,7 @@ function App() {
   
 
   useEffect( () => {
+    console.log(process.env.REACT_APP_API_ENDPOINT);
     fetchToDo();
     fetchDone();
     fetchAll();
