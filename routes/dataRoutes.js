@@ -21,7 +21,6 @@ router.post("/toDoList", (req, res) => {
     task: task,
     doneStatus: false,
   });
-  console.log(newList);
   newList.save((err) => {
     !err ? res.json("create success") : res.send(err);
   });
@@ -79,7 +78,7 @@ router.delete("/toDoList/:id", (req, res) => {
       res.json("Delete failure!");
     });
   }
-  
+
 });
 
 module.exports = router;

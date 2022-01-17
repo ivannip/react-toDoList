@@ -74,49 +74,49 @@ function App() {
     }
   }
 
-  function fetchToDo() {
-    const criteria = {};
-    const options = {
-      url: `${process.env.REACT_APP_API_ENDPOINT}api/toDoList/false`,
-      method: 'GET',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      data: criteria
-    };
-    axios(options).then(result => {
-      setToDoList(result.data);
-    })
-    .catch(err => {
-      console.log(err);
-    })
-  }
-
-  async function fetchDone() {
-    try {
-      const res = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList/true`);
-      setDoneList(res.data);
-    }
-    catch (err) {
-      console.log(err);
-    }
-  }
+  // function fetchToDo() {
+  //   const criteria = {};
+  //   const options = {
+  //     url: `${process.env.REACT_APP_API_ENDPOINT}api/toDoList/false`,
+  //     method: 'GET',
+  //     headers: {
+  //       "Content-Type": "application/json"
+  //     },
+  //     data: criteria
+  //   };
+  //   axios(options).then(result => {
+  //     setToDoList(result.data);
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //   })
+  // }
+  //
+  // async function fetchDone() {
+  //   try {
+  //     const res = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList/true`);
+  //     setDoneList(res.data);
+  //   }
+  //   catch (err) {
+  //     console.log(err);
+  //   }
+  // }
 
   async function fetchAll() {
     try {
       const res = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList/`);
-      setAllList(res.data)
+      setToDoList(res.data.filter(item => !item.doneStatus));
+      setDoneList(res.data.filter(item => item.doneStatus));
+      setAllList(res.data);
+
     }
     catch (err) {
       console.log(err);
     }
   }
-  
+
 
   useEffect( () => {
-    console.log(process.env.REACT_APP_API_ENDPOINT);
-    fetchToDo();
-    fetchDone();
     fetchAll();
   }, [status])
 
@@ -128,24 +128,26 @@ function App() {
       <InputList updateStatus={updateStatus}/>
       <TabView>
         <TabPanel header={"Outstanding (".concat(toDoLists.length).concat(")")}>
-          
-        {forDelete? <Button label="Delete All" className="p-button-rounded p-button-danger" onClick={showConfirm}/>:""}        
+
+        {forDelete? <Button label="Delete All" className="p-button-rounded p-button-danger" onClick={showConfirm}/>:""}
              {
                toDoLists.map( (list) => {
-                return <Note toDoList={list} key={list._id} updateStatus={updateStatus} deleteStatus={forDelete}/>
+                return <Note toDoList={list} key={list._id} updateStatus={updateStatus}
+                  deleteStatus={forDelete}/>
                })
              }
         </TabPanel>
         <TabPanel header={"Finished (".concat(doneLists.length).concat(")")}>
-        {forDelete? <Button label="Delete All" className="p-button-rounded p-button-danger" onClick={handleDeleteAll}/>:""}
+        {forDelete? <Button label="Delete All" className="p-button-rounded p-button-danger" onClick={showConfirm}/>:""}
             {
                doneLists.map( (list) => {
-                return <Note toDoList={list} key={list._id} updateStatus={updateStatus} deleteStatus={forDelete}/>
+                return <Note toDoList={list} key={list._id} updateStatus={updateStatus}
+                  deleteStatus={forDelete}/>
                })
              }
         </TabPanel>
         <TabPanel header={"All (".concat(allLists.length).concat(")")}>
-        {forDelete? <Button label="Delete All" className="p-button-rounded p-button-danger" onClick={handleDeleteAll}/>:""}
+        {forDelete? <Button label="Delete All" className="p-button-rounded p-button-danger" onClick={showConfirm}/>:""}
             {
                allLists.map( (list) => {
                 return <Note toDoList={list} key={list._id} updateStatus={updateStatus} deleteStatus={forDelete}/>
@@ -162,7 +164,7 @@ function App() {
         <Button icon="pi pi-trash" className="p-button-rounded" onClick={enableDelete}/>
         </div>)
       }
-      
+
       <Footer />
     </div>
   );
