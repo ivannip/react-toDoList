@@ -19,19 +19,25 @@ function Note(props) {
   //   props.updateStatus();
   // }
 
-  function handleSelect(event) {
+  async function handleSelect(event) {
     setChecked(event.checked);
-    taskDone(event.target.value, event.checked);
-    props.updateStatus();
+    //taskDone(event.target.value, event.checked);
+    try {
+      await axios.patch(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList/byID`, {id: event.target.value, doneStatus: event.checked});
+      props.updateStatus();
+    } catch (err) {
+      console.log(err);
+    }
+    
   }
 
-  async function taskDone(id, status) {
-    try {
-      await axios.patch(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList/byID`, {id: id, doneStatus: status});
-    } catch(error) {
-      console.log(error);
-    }
-  }
+  // async function taskDone(id, status) {
+  //   try {
+  //     await axios.patch(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList/byID`, {id: id, doneStatus: status});
+  //   } catch(error) {
+  //     console.log(error);
+  //   }
+  // }
 
   async function handleDelete() {
     try {
