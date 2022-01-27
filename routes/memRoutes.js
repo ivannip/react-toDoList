@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const list = require("../models/list");
+const uuidv4 = require("uuid").v4;
+
+var lists = [];
 
 //setup proxy for server client connection with diff ports, added for deployment in local nginx
 router.use((req, res, next) => {
@@ -17,40 +19,36 @@ router.use((req, res, next) => {
 //add task
 router.post("/toDoList", (req, res) => {
   const { task } = req.body;
-  const newList = new list({
+  const newList = {
+    _id: uuidv4(),
     task: task,
     doneStatus: false,
-  });
-  newList.save((err) => {
-    !err ? res.json("create success") : res.send(err);
-  });
+  };
+  lists.push(newList);
+  res.json("create success");
 });
 
 //update status
 router.patch("/toDoList/:type", (req, res) => {
-  console.log(req.body);
   const {id, task, doneStatus} = req.body;
+  console.log(id);
+  console.log(doneStatus);
   if (req.params.type === "byID") {
-    list.findByIdAndUpdate(
-      { _id: id },
-      { $set: req.body },
-      (err) => {
-        !err ? res.json("patch success") : res.send(err);
-      }
-    );
-  }
-  
+    const list = lists.find(lt => lt._id == id);
+    const idx = lists.findIndex(list => list._id == id);
+    if (idx > -1) {
+      lists.splice(idx, 1, {...list, doneStatus:doneStatus});
+      res.json("Record updated!");
+    } else {
+      res.json("No record found!");
+    }    
+  }  
 });
+  
 
 //find all
-router.get("/toDoList", (req, res) => {
-  list.find({}, (err, foundRecords) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.json(foundRecords);
-    }
-  });
+router.get("/toDoList", (req, res) => { 
+      res.json(lists);
 });
 
 //find by status
@@ -66,26 +64,19 @@ router.get("/toDoList", (req, res) => {
 
 //Delete one by ID
 router.post("/toDoList/:type", (req, res) => {
-  console.log(req.body);
   const {id} = req.body;
   if (req.params.type === "deleteAll") {
-    list.deleteMany()
-    .then(() => {
-      res.json("Record is deleted!");
-    })
-    .catch((err) => {
-      res.json("Delete failure!");
-    });
+    lists = [];
+    res.json("Records are deleted!");
   } else {
-    list.findByIdAndDelete(id)
-    .then(() => {
-      res.json("Record is deleted!");
-    })
-    .catch((err) => {
-      res.json("Delete failure!");
-    });
+      const idx = lists.findIndex(list => list._id == id)
+      if (idx > -1) {
+        lists.splice(idx, 1);
+        res.json("Record is deleted!");
+      } else {
+        res.json("No record found!");
+      }
   }
-
 });
 
 module.exports = router;

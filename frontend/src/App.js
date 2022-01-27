@@ -26,6 +26,7 @@ function App() {
   const [status, setStatus] = useState(false);
   const [forDelete, setForDelete] = useState(false);
   const toastBR = useRef(null);
+  
 
   function showConfirm() {
     toastBR.current.show({ severity: 'warn', sticky: true, content: (
@@ -66,7 +67,7 @@ function App() {
   async function handleDeleteAll() {
     clearToast();
     try {
-      await axios.delete(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList/all`);
+      await axios.post(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList/deleteAll`);
       updateStatus();
       enableDelete();
     } catch (err) {
@@ -104,7 +105,7 @@ function App() {
 
   async function fetchAll() {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList/`);
+      const res = await axios.get(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList`);
       setToDoList(res.data.filter(item => !item.doneStatus));
       setDoneList(res.data.filter(item => item.doneStatus));
       setAllList(res.data);

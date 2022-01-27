@@ -25,9 +25,9 @@ function Note(props) {
     props.updateStatus();
   }
 
-  async function taskDone(key, status) {
+  async function taskDone(id, status) {
     try {
-      await axios.patch(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList/${key}`, {doneStatus: status});
+      await axios.patch(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList/byID`, {id: id, doneStatus: status});
     } catch(error) {
       console.log(error);
     }
@@ -35,11 +35,12 @@ function Note(props) {
 
   async function handleDelete() {
     try {
-      await axios.delete(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList/${props.toDoList._id}`)
+      await axios.post(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList/deleteOne`, {id: props.toDoList._id});
+      props.updateStatus();
     } catch (err) {
       console.log(err)
     }
-    props.updateStatus();
+    
   }
 
   return (
