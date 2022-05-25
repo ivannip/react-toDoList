@@ -1,0 +1,2 @@
+git remote add heroku https://git.heroku.com/react-onlineshop0x.git
+git push heroku master

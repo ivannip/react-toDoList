@@ -18,11 +18,11 @@ mongoose.connect(process.env.MONGODB_URL || LOCAL_DB, {
   useNewUrlParser: true,
 });
 
-const dataRouter = require("./routes/dataRoutes");
-app.use("/api", dataRouter);
+// const dataRouter = require("./routes/dataRoutes");
+// app.use("/api", dataRouter);
 
-//const memRouter = require("./routes/memRoutes");
-//app.use("/api", memRouter);
+const memRouter = require("./routes/memRoutes");
+app.use("/api", memRouter);
 
 mongoose.connection.once("open", function () {
   console.log("Connected to the Database.");

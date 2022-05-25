@@ -5,7 +5,6 @@ import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 
 
-
 function InputList(props) {
   //const [value, setValue] = useState("");
   const [toDoList, setList] = useState({task:"", doneStatus: false});
