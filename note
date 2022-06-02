@@ -1,2 +1,23 @@
+git add .
+git commit -m "push to github"
+git remote add origin git@github.com:ivannip/react-toDoList.git
+git branch -M master
+git push original master
+
 git remote add heroku https://git.heroku.com/react-onlineshop0x.git
 git push heroku master
+
+
+
+#Docker deploy postgreSQL
+
+mkdir -p ~/data/pg-node-orms
+docker run --name pg-node-orms -p 5432:5432 -e POSTGRES_PASSWORD=hunter12 -e POSTGRES_USER=orm-user -e POSTGRES_DB=orm-db -v ~/data/pg-node-orms:/var/lib/postgresql/data -d postgres
+
+#run psql
+docker run -it --rm --link pg-node-orms:postgres postgres psql -h postgres -U orm-user orm-db
+
+#remove pstgreSQL docker
+docker stop pg-node-orms
+docker rm pg-node-orms
+sudo rm -rf ~/data/pg-node-orms
