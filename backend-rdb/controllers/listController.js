@@ -8,7 +8,7 @@ exports.findAll = async (req, res) => {
     try {
         const foundRecords = await list.findAll({});
         var returnRecords = [];
-        // this logic is to duplicate a field _id when compatible with the frontend design for MongoDB
+        // this logic is to duplicate a field _id to compatible with the frontend design for MongoDB
         foundRecords.forEach( rec => {
             var _temp = rec.dataValues;
             _temp["_id"] = _temp.id;
@@ -42,12 +42,12 @@ exports.updateStatus = (req, res) => {
         console.log({id, task, doneStatus});
         if (req.params.type === "byID") {
           try {
-            //list.update(req.body, {where: { id: id} })
-            const query = "Update lists set \"doneStatus\" = $status where id = $id";
-            sequelize.query(query, {
-              bind: {status: doneStatus, id: id},
-              type: QueryTypes.UPDATE
-            })
+            list.update(req.body, {where: { id: id} })
+            // const query = "Update lists set \"doneStatus\" = $status where id = $id";
+            // sequelize.query(query, {
+            //   bind: {status: doneStatus, id: id},
+            //   type: QueryTypes.UPDATE
+            // })
             res.json("patch success")
           } catch (err) {
             res.send(err);

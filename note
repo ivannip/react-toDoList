@@ -2,10 +2,26 @@ git add .
 git commit -m "push to github"
 git remote add origin git@github.com:ivannip/react-toDoList.git
 git branch -M master
-git push original master
+git push origin master
 
 git remote add heroku https://git.heroku.com/react-onlineshop0x.git
 git push heroku master
+
+#Docker deploy MySQL
+docker run --name mysql-db --restart on-failure -e MYSQL_ROOT_PASSWORD=reacttodolist -d arm64v8/mysql:oracle
+
+brew install mysql
+brew services start mysql
+mysql_secure_installation
+brew services stop mysql
+mysql.server start
+mysql.server stop
+mysql -u root -p
+create user 'todolist'@'localhost' identified by 'password'
+GRANT ALL PRIVILEGES ON todolist_db TO 'todolist'@'localhost'
+CREATE DATABASE todolist_db
+
+DATABASE_URL=mysql://todolist:password@localhost/todolist_db
 
 
 
@@ -21,3 +37,5 @@ docker run -it --rm --link pg-node-orms:postgres postgres psql -h postgres -U or
 docker stop pg-node-orms
 docker rm pg-node-orms
 sudo rm -rf ~/data/pg-node-orms
+
+DATABASE_URL=postgres://orm-user:hunter12@localhost:5432/orm-db
