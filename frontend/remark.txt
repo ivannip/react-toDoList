@@ -2,5 +2,5 @@ docker build . -t ivannip/todolist-frontend
 docker run -p 3000:3000 -d ivannip/todolist-frontend
 
 The following changes for microservice:
-1. the statement of proxy=localhost:3000 in package.json of backend module has been removed for microservice
+1. the statement of "proxy": "http://localhost:3001", in package.json of backend module has been removed for microservice
 2. value of REACT_APP_API_ENDPOINT in env is changed from / to http://localhost:3001

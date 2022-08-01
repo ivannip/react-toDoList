@@ -9,13 +9,14 @@ import { BlockUI } from 'primereact/blockui';
 
 function Note(props) {
   
-  const [checked, setChecked] = useState(props.toDoList.doneStatus);
+  const [checked, setChecked] = useState(props.toDoList.doneStatus?true:false);
 
  
   async function handleSelect(event) {
-    setChecked(event.checked);
+    setChecked((prev) => { return !prev});
     try {
-      await axios.patch(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList/byID`, {id: event.target.value, doneStatus: event.checked});
+      await axios.patch(`${process.env.REACT_APP_API_ENDPOINT}api/toDoList/byID`, 
+      {id: event.target.value, task: props.toDoList.task, doneStatus: event.checked});    
       props.updateStatus();
     } catch (err) {
       console.log(err);
@@ -41,6 +42,8 @@ function Note(props) {
       
         <Checkbox style={{marginRight:"20px"}} inputId={props.toDoList._id} value={props.toDoList._id} checked={checked} onChange={handleSelect}></Checkbox>
         {props.toDoList.task}
+        {checked}
+        {props.toDoList.doneStatus}
         </BlockUI>
       {
        props.deleteStatus? (<Button style={{float: "right", marginRight:"2px"}} icon="pi pi-trash" 

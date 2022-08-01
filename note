@@ -17,9 +17,11 @@ brew services stop mysql
 mysql.server start
 mysql.server stop
 mysql -u root -p
-create user 'todolist'@'localhost' identified by 'password'
-GRANT ALL PRIVILEGES ON todolist_db TO 'todolist'@'localhost'
 CREATE DATABASE todolist_db
+create user 'todolist'@'localhost' identified by 'password'
+GRANT ALL PRIVILEGES ON todolist_db.* TO 'todolist'@'localhost'
+FLUSH PRIVILEGES
+SHOW GRANTS FOR 'todolist'@'localhost';
 
 DATABASE_URL=mysql://todolist:password@localhost/todolist_db
 

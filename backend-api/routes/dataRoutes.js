@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const list = require("../models/list");
+
+/** choose database or memory to store the list here */
+//const {findAll, addTask, updateStatus, deleteTask} = require("../controllers/dbService");
+const {findAll, addTask, updateStatus, deleteTask} = require("../controllers/memService");
 
 //setup proxy for server client connection with diff ports, added for deployment in local nginx
 router.use((req, res, next) => {
@@ -15,75 +18,52 @@ router.use((req, res, next) => {
 });
 
 //add task
-router.post("/toDoList", (req, res) => {
+router.post("/toDoList", async (req, res) => {
   const { task } = req.body;
-  const newList = new list({
-    task: task,
-    doneStatus: false,
-  });
-  newList.save((err) => {
-    !err ? res.json("create success") : res.send(err);
-  });
+    try {
+      const savedTask = await addTask({ task });
+      res.json(savedTask)
+    } catch (err) {
+      res.json({message: err})
+    }
 });
 
 //update status
-router.patch("/toDoList/:type", (req, res) => {
-  console.log(req.body);
+router.patch("/toDoList/:type", async (req, res) => {
+  
   const {id, task, doneStatus} = req.body;
-  if (req.params.type === "byID") {
-    list.findByIdAndUpdate(
-      { _id: id },
-      { $set: req.body },
-      (err) => {
-        !err ? res.json("patch success") : res.send(err);
-      }
-    );
+  const actionType = req.params.type;
+  //console.log({id, task, doneStatus, actionType});
+  try {
+    const savedList = await updateStatus({id, task, doneStatus, actionType});
+    //console.log(savedList);
+    res.json(savedList)
+  } catch (err) {
+    res.json({message: err});
+  }
+});
+
+//find all
+router.get("/toDoList", async (req, res) => {
+  try {
+    const foundLists = await findAll();
+    res.json(foundLists); 
+  } catch (err) {
+    res.json({message: err});
   }
   
 });
 
-//find all
-router.get("/toDoList", (req, res) => {
-  list.find({}, (err, foundRecords) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.json(foundRecords);
-    }
-  });
-});
-
-//find by status
-// router.get("/toDoList/:done", (req, res) => {
-//   list.find({ doneStatus: req.params.done }, (err, foundRecords) => {
-//     if (err) {
-//       res.send(err);
-//     } else {
-//       res.json(foundRecords);
-//     }
-//   });
-// });
 
 //Delete one by ID
-router.post("/toDoList/:type", (req, res) => {
-  console.log(req.body);
+router.post("/toDoList/:type", async (req, res) => {
+  const actionType = req.params.type;
   const {id} = req.body;
-  if (req.params.type === "deleteAll") {
-    list.deleteMany()
-    .then(() => {
-      res.json("Record is deleted!");
-    })
-    .catch((err) => {
-      res.json("Delete failure!");
-    });
-  } else {
-    list.findByIdAndDelete(id)
-    .then(() => {
-      res.json("Record is deleted!");
-    })
-    .catch((err) => {
-      res.json("Delete failure!");
-    });
+  try {
+    const deletedMessage = deleteTask({id, actionType});
+    res.json(deletedMessage);
+  } catch (err) {
+    res.json({message: err});
   }
 
 });

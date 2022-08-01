@@ -1,35 +1,23 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
 const path = require("path");
+const {connectDB} = require("./models/db")
 
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 const PORT = process.env.PORT || "3001";
+
+// Connect to database, comment out if using memory
+//connectDB();
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
+const dataRouter = require("./routes/dataRoutes");
+app.use("/api", dataRouter);
 
-const LOCAL_DB = "mongodb://127.0.0.1:27017/toDoList";
-mongoose.connect(process.env.MONGODB_URL || LOCAL_DB, {
-  useNewUrlParser: true,
-});
-
-// const dataRouter = require("./routes/dataRoutes");
-// app.use("/api", dataRouter);
-
-const memRouter = require("./routes/memRoutes");
-app.use("/api", memRouter);
-
-mongoose.connection.once("open", function () {
-  console.log("Connected to the Database.");
-});
-mongoose.connection.on("error", function (error) {
-  console.log("Mongoose Connection Error : " + error);
-});
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static("frontend/build"));

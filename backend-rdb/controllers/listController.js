@@ -1,78 +1,71 @@
-const { QueryTypes } = require("sequelize");
+
 const { sequelize } = require("../models/db");
 const db = require("../models/db");
+const { QueryTypes } = require('sequelize');
 const list = db.lists;
 const op = db.Sequelize.Op;
 
-exports.findAll = async (req, res) => {
+exports.findAll = async () => {
     try {
-        const foundRecords = await list.findAll({});
-        var returnRecords = [];
-        // this logic is to duplicate a field _id to compatible with the frontend design for MongoDB
-        foundRecords.forEach( rec => {
-            var _temp = rec.dataValues;
-            _temp["_id"] = _temp.id;
-            returnRecords.push(_temp)
-        })
-
-        //console.log(returnRecords)
-        res.json(returnRecords);
+        const query = "Select id as _id, task, doneStatus, createdAt, updatedAt from lists"
+        //const foundRecords = await list.findAll({});
+        foundRecords = await sequelize.query(query, {type: QueryTypes.SELECT});
+        return foundRecords;
     } catch (err) {
-        res.send(err);
+        console.log(err);
+        throw err
     }
 }
 
-exports.addTask = async (req, res) => {
-        
-        const { task } = req.body;
+exports.addTask = async ({task}) => {
         const newList = {
         task: task,
         doneStatus: false,
         };
         try {
-            list.create(newList)
-            res.json("create success") 
+            await list.create(newList)
+            return list
         } catch (err) {
-            res.send(err)
+            throw err
         }
 }
 
-exports.updateStatus = (req, res) => {
-        const {id, task, doneStatus} = req.body;
-        console.log({id, task, doneStatus});
-        if (req.params.type === "byID") {
+exports.updateStatus = async ({id, task, doneStatus, actionType}) => {
+        
+       
+        if (actionType === "byID") {
           try {
-            list.update(req.body, {where: { id: id} })
+            savedList = await list.update({id, task, doneStatus}, {where: { id: id} })
             // const query = "Update lists set \"doneStatus\" = $status where id = $id";
             // sequelize.query(query, {
             //   bind: {status: doneStatus, id: id},
             //   type: QueryTypes.UPDATE
             // })
-            res.json("patch success")
+            return savedList
           } catch (err) {
-            res.send(err);
+            throw err
           }          
         }
 }
 
-exports.deleteOneById = (req, res) => {
+exports.deleteTask = async ({id, actionType}) => {
     
-    const {id} = req.body;
-    if (req.params.type === "deleteAll") {
+    
+    if (actionType === "deleteAll") {
       list.destroy({where: {}, truncate: false})
       .then(() => {
-        res.json("Record is deleted!");
+        return {message: "Records are Deleted"}
       })
       .catch((err) => {
-        res.json("Delete failure!");
+        return {message: "Delete failure"}
       });
     } else {
       list.destroy( {where: {id: id}})
       .then(() => {
-        res.json("Record is deleted!");
+        return {message: "Record is Deleted"}
       })
       .catch((err) => {
-        res.json("Delete failure!");
+        return {message: "Delete failure"}
       });
     }
 }

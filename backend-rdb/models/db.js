@@ -8,7 +8,6 @@ const DISABLE_SEQUELIZE_DEFAULTS = {
 var sequelize
 const { DataTypes } = Sequelize;
 
-console.log(process.env.DATABASE_URL)
 sequelize = new Sequelize(process.env.DATABASE_URL)
 
 
