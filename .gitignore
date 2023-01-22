@@ -9,3 +9,5 @@ note
 remark.txt
 .DS_Store
 backend-rdb
+backend-typescript
+build

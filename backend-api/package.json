@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "concurrently \"nodemon server.js\" \"cd ../frontend && npm run start\"",
+    "build": "webpack",
     "heroku-postbuild": "cd ../frontend && npm install && npm run build"
   },
   "author": "",
@@ -16,5 +17,9 @@
     "express": "^4.17.2",
     "mongoose": "^6.1.6",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "terser-webpack-plugin": "^5.3.3",
+    "webpack-cli": "^4.10.0"
   }
 }

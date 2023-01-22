@@ -4,8 +4,8 @@ git remote add origin git@github.com:ivannip/react-toDoList.git
 git branch -M master
 git push origin master
 
-git remote add heroku https://git.heroku.com/react-onlineshop0x.git
-git push heroku master
+# git remote add heroku https://git.heroku.com/react-onlineshop0x.git
+# git push heroku master
 
 #Docker deploy MySQL
 docker run --name mysql-db --restart on-failure -e MYSQL_ROOT_PASSWORD=reacttodolist -d arm64v8/mysql:oracle
@@ -41,3 +41,15 @@ docker rm pg-node-orms
 sudo rm -rf ~/data/pg-node-orms
 
 DATABASE_URL=postgres://orm-user:hunter12@localhost:5432/orm-db
+
+#depoly the whole application to a single docker
+docker build . -t todolist
+docker run -p 3001:3001 -d todolist
+
+# deploy docker to AWS
+#https://www.freecodecamp.org/news/how-to-deploy-a-node-js-application-to-amazon-web-services-using-docker-81c2a2d7225b/
+
+aws configure
+aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/i9o8d5w4
+docker tag todolist:latest public.ecr.aws/i9o8d5w4/node-js-test:v1
+docker push public.ecr.aws/i9o8d5w4/node-js-test:v1

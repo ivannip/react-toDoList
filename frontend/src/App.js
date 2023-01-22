@@ -1,7 +1,6 @@
 import React, {useEffect, useState, useRef} from "react";
 import axios from "axios";
 
-import logo from './logo.svg';
 import './App.css';
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -155,7 +154,7 @@ function App() {
                })
              }
         </TabPanel>
-      </TabView>,
+      </TabView>
       {
         (allLists.length === 0)?(""):forDelete?
         (<div className="delete-icon" style={{ position: 'relative', height: '350px' }}>

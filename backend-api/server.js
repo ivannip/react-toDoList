@@ -8,8 +8,8 @@ if (process.env.NODE_ENV !== "production") {
 }
 const PORT = process.env.PORT || "3001";
 
-// Connect to database, comment out if using memory
-//connectDB();
+//Connect to database, comment out if using memory
+connectDB();
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -19,13 +19,13 @@ const dataRouter = require("./routes/dataRoutes");
 app.use("/api", dataRouter);
 
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static("frontend/build"));
+//if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/build")));
 
-  app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
+  app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
   });
-}
+//}
 
 app.listen(PORT, function () {
   console.log(`Server listening on port ${PORT}`);

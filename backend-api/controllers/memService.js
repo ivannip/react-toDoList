@@ -1,6 +1,6 @@
 const uuidv4 = require("uuid").v4;
 
-const lists = [];
+let lists = [];
 
 exports.findAll = async () => {
     return lists;
