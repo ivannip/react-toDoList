@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "concurrently \"nodemon server.js\" \"cd ../frontend && npm run start\"",
     "build": "npm run build --prefix ../frontend",
+    "start": "node server",
     "build:webpack": "webpack",
     "heroku-postbuild": "cd ../frontend && npm install && npm run build"
   },
