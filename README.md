@@ -1,4 +1,4 @@
-This toDoList is a pilot application written as a POC for web application using MERN
+This toDoList is a pilot application written as a POC for web application development using MERN during my job
 
 1. The backend-api is the module of RESTFUL API
 2. The routes/dataRoutes.js has lines of code which could use either mongoDB or memory as data storage
