@@ -30,10 +30,6 @@ jobs:
       - run: npm ci --prefix frontend
       - run: npm run build --prefix frontend
       - run: npm test --prefix backend-api
-      
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
 
   deploy:
     name: Deploy to Render
@@ -41,10 +37,6 @@ jobs:
     needs: [build]
     steps:
       - name: Trigger deployment
-        uses: sws2apps/render-deployment@main #consider using pin for dependabot auto update
-        with:
-          serviceId: ${{ secrets.RENDER_SERVICE_ID }}
-          apiKey: ${{ secrets.RENDER_API_KEY }}
-          multipleDeployment: false #optional, default true...
+        run: curl "https://api.render.com/deploy/srv-cf6sn4da499d72o3e8g0?key=-WuKfLKf5nk"
 
   
