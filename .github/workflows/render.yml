@@ -29,7 +29,7 @@ jobs:
       - run: npm ci --prefix backend-api
       - run: npm ci --prefix frontend
       - run: npm run build --prefix frontend
-      - run: npm test
+      - run: npm test --prefix backend-api
       
       # Runs a single command using the runners shell
       - name: Run a one-line script
