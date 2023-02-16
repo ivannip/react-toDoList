@@ -53,3 +53,15 @@ aws configure
 aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/i9o8d5w4
 docker tag todolist:latest public.ecr.aws/i9o8d5w4/node-js-test:v1
 docker push public.ecr.aws/i9o8d5w4/node-js-test:v1
+
+# working with PM2 and Nginx
+1. generate ecosystem.config by "pm2 init"
+2. run an offical nginx docker image by "docker run -it --rm -d -p 8080:80 --name web nginx"
+docker build . -t nginxproxy 
+docker run -it --rm -d -p 8080:80 --name web nginxproxy
+docker run -p 8080:80 -d ngnixproxy
+
+# nginx
+run nginx by "/opt/homebrew/opt/nginx/bin/nginx" or "brew services start nginx"
+test nginx by "curl http://127.0.0.1:8080"
+nginx -t to check the config file location
