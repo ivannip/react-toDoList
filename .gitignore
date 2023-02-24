@@ -5,9 +5,10 @@ node_modules
 .git
 .env
 .vscode
-note
+.note
 remark.txt
 .DS_Store
 backend-rdb
 backend-typescript
 build
+ecosystem.config.js

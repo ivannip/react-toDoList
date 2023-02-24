@@ -56,7 +56,8 @@ docker push public.ecr.aws/i9o8d5w4/node-js-test:v1
 
 # working with PM2 and Nginx
 1. generate ecosystem.config by "pm2 init"
-2. run an offical nginx docker image by "docker run -it --rm -d -p 8080:80 --name web nginx"
+2. pm2 start
+3. run an offical nginx docker image by "docker run -it --rm -d -p 8080:80 --name web nginx"
 docker build . -t nginxproxy 
 docker run -it --rm -d -p 8080:80 --name web nginxproxy
 docker run -p 8080:80 -d ngnixproxy
