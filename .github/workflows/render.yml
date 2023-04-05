@@ -37,6 +37,8 @@ jobs:
     needs: [build]
     steps:
       - name: Trigger deployment
-        run: curl "https://api.render.com/deploy/srv-cf6sn4da499d72o3e8g0?key=-WuKfLKf5nk"
+        run: |
+            URL="${{ secrets.RENDER_DEPLOY_URL }}"
+            curl "$URL"
 
   
